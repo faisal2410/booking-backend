@@ -1,18 +1,22 @@
-import admin from '../firebase';
+import admin from "../firebase";
+import User from "../models/user";
+
+
+
 export const currentUser = async(req, res) => {
-    // console.log("Req Headers Token", req.headers.token)
+    console.log("CURRENT USER RETURNING FROM req.currentUser", req.currentUser);
+    res.json(req.currentUser);
+};
 
-    try {
-        const firebaseUser = await admin.auth().verifyIdToken(req.headers.token);
-        console.log("FIREBASE USER IN CURRENT USER MIDDLEWEAR", firebaseUser);
-        res.json(firebaseUser);
-
-    } catch (err) {
-        console.log(err);
-        res.status(401).json({
-
-            err: "Invalid or Expired Token"
-        })
-
+export const privateRoute = async(req, res) => {
+    // console.log("REQ HEADERS TOKEN IN PRIVATE ROUTE", req.headers.token);
+    if (req.currentUser) {
+        res.json({
+            ok: true,
+        });
+    } else {
+        res.json({
+            ok: false,
+        });
     }
-}
+};
